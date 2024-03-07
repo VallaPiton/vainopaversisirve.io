@@ -58,7 +58,7 @@ function calculateBinomial() {
     if (calculationType === 'exact') {
         prob = binomialProbability(k, n, p);
     } else if (calculationType === 'atLeast') {
-        prob = binom.cdf(k, n, p);
+        prob = binomCdf(k, n, p);
     }
 
     document.getElementById('resultProbability').innerText = `The probability is ${prob.toFixed(5)}`;
@@ -68,6 +68,15 @@ function calculateBinomial() {
 function binomialProbability(k, n, p) {
     const binomCoefficient = factorial(n) / (factorial(k) * factorial(n - k));
     return binomCoefficient * Math.pow(p, k) * Math.pow(1 - p, n - k);
+}
+
+// Function to calculate binomial cumulative distribution function
+function binomCdf(k, n, p) {
+    let cumulativeProbability = 0;
+    for (let i = 0; i <= k; i++) {
+        cumulativeProbability += binomialProbability(i, n, p);
+    }
+    return cumulativeProbability;
 }
 
 // Function to calculate factorial
@@ -88,7 +97,7 @@ function listBinomialDistribution() {
     if (calculationTypeDist === 'exact') {
         dist.push(...r_values.map(r => binomialProbability(r, nDist, pDist)));
     } else if (calculationTypeDist === 'atLeast') {
-        dist.push(...r_values.map(r => binom.cdf(r, nDist, pDist)));
+        dist.push(...r_values.map(r => binomCdf(r, nDist, pDist)));
     }
 
     // Display the distribution table
@@ -99,11 +108,6 @@ function listBinomialDistribution() {
     tableHTML += '</table>';
 
     document.getElementById('distributionTable').innerHTML = tableHTML;
-}
-</script>
-
-</body>
-</html>
 }
 </script>
 
