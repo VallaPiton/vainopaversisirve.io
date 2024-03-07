@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binomial Distribution Calculator</title>
+</head>
+<body>
+
+<h2>Binomial Distribution Calculator</h2>
+
+<!-- Binomial Probability Calculation -->
+<div>
+    <h3>Calculate Binomial Probability</h3>
+    <label for="k">Enter k value:</label>
+    <input type="number" id="k">
+    <br>
+    <label for="n">Enter N value:</label>
+    <input type="number" id="n">
+    <br>
+    <label for="p">Enter P value:</label>
+    <input type="number" step="0.01" id="p">
+    <br>
+    <button onclick="calculateBinomial()">Calculate Probability</button>
+    <p id="resultProbability"></p>
+</div>
+
+<!-- List the values of Binomial distribution for all cases -->
+<div>
+    <h3>Binomial Distribution Values</h3>
+    <label for="nDist">Enter N value:</label>
+    <input type="number" id="nDist">
+    <br>
+    <label for="pDist">Enter P value:</label>
+    <input type="number" step="0.01" id="pDist">
+    <br>
+    <button onclick="listBinomialDistribution()">List Distribution Values</button>
+    <div id="distributionTable"></div>
+</div>
+
+<script>
+// Function to calculate binomial probability
+function calculateBinomial() {
+    const k = parseInt(document.getElementById('k').value);
+    const n = parseInt(document.getElementById('n').value);
+    const p = parseFloat(document.getElementById('p').value);
+
+    const prob = binomialProbability(k, n, p);
+
+    document.getElementById('resultProbability').innerText = `The probability of having exactly ${k} is ${prob}`;
+}
+
+// Function to calculate binomial probability
+function binomialProbability(k, n, p) {
+    const binomCoefficient = factorial(n) / (factorial(k) * factorial(n - k));
+    return binomCoefficient * Math.pow(p, k) * Math.pow(1 - p, n - k);
+}
+
+// Function to calculate factorial
+function factorial(num) {
+    if (num === 0 || num === 1) return 1;
+    return num * factorial(num - 1);
+}
+
+// Function to list values of binomial distribution
+function listBinomialDistribution() {
+    const nDist = parseInt(document.getElementById('nDist').value);
+    const pDist = parseFloat(document.getElementById('pDist').value);
+
+    const r_values = Array.from({ length: nDist + 1 }, (_, i) => i);
+    const dist = r_values.map(r => binomialProbability(r, nDist, pDist));
+
+    // Display the distribution table
+    let tableHTML = '<table><tr><th>r</th><th>p(r)</th></tr>';
+    for (let i = 0; i <= nDist; i++) {
+        tableHTML += `<tr><td>${r_values[i]}</td><td>${dist[i]}</td></tr>`;
+    }
+    tableHTML += '</table>';
+
+    document.getElementById('distributionTable').innerHTML = tableHTML;
+}
+</script>
+
+</body>
+</html>
